@@ -1,11 +1,10 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import AuthLayout from "./layouts/AuthLayout";
 import PostsLayout from "./layouts/PostsLayout"
 import MainPage from "./pages/MainPage";
 import NavBar from "./components/NavBar/NavBar";
-// import ProtectedRoute from "./components/ProtectedRoute";
 import withRedux from "./hoc/withRedux";
 import withRouter from "./hoc/withRouter";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,13 +20,17 @@ function App() {
             <Routes>
                 <Route index element={<MainPage/>} />
                 <Route path='auth' element={<AuthLayout/>} >
+                    <Route index element={<Navigate to='/auth/signup'/>}/>
                     <Route path="login" element={<LoginPage/>}/>
                     <Route path="signup" element={<SignUpPage/>}/>
+                    <Route path="*" element={<Navigate to='/auth/signup'/>}/>
                 </Route>
                 <Route path='/posts/*' element={<PostsLayout/>}>
                     <Route path="" element={<PostsListPage/>}/>
                     <Route path=":postId" element={<PostPage/>}/>
                 </Route>
+                <Route path="*" element={<Navigate to='/posts'/>}/>
+                
                 {/* <Redirect from='*' to='/' /> */}
             </Routes>
 

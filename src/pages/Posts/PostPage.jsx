@@ -1,7 +1,7 @@
 import React from "react";
 // Librares
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 // Store
 import { loadingStatusSelector, postSelector } from "../../store/postsSlice";
 // Components
@@ -11,11 +11,21 @@ import StyledNavLink from "../../components/StyledNavLink";
 // Icons
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 
+
 const PostPage = () => {
     const { postId } = useParams();
 
     const loadingStatus = useSelector(loadingStatusSelector());
     const post = useSelector(postSelector(postId));
+
+    // useEffect(() => {
+    //     console.log('post', post)
+    //     console.log('loadingStatus', loadingStatus)
+    // }, [post, loadingStatus])
+
+    if (loadingStatus !== 'pending' && loadingStatus !== 'idle' && !post) {
+       return <Navigate to='/posts'/>
+    }
 
     return (
         <>
