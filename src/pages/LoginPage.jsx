@@ -15,6 +15,7 @@ import TextField from "../components/inputs/TextInput";
 import Card from "../components/Card";
 // Icons
 import { UserIcon, KeyIcon } from "@heroicons/react/outline";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
     username: Yup.string().required("This field is required!"),
@@ -29,6 +30,7 @@ const initialValues = {
 const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const { message } = useSelector((state) => state.message);
+    const navigate = useNavigate()
     // const history = useHistory();
     const dispatch = useDispatch();
 
@@ -45,6 +47,7 @@ const LoginPage = () => {
         dispatch(login({ username, password }))
             .unwrap()
             .then(() => {
+                navigate('/posts', {replace: true})
                 // history.push(redirect || "/");
             })
             .catch(() => {
