@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useRoutes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import AuthLayout from "./layouts/AuthLayout";
 import PostsLayout from "./layouts/PostsLayout"
@@ -13,8 +13,60 @@ import PostsListPage from "./pages/Posts/PostsListPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SigupPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+const routes = [
+    {
+        path: '/',
+        element: <MainPage/>
+    },
+    {
+        path: 'auth',
+        element: <AuthLayout/>,
+        children: [
+            {
+                path: '/',
+                element: <Navigate to='/auth/signup'/>
+            },
+            {
+                path: "login",
+                element: <LoginPage/>
+            },
+            {
+                path: "signup",
+                element: <SignUpPage/>
+            },
+            {
+                path: "*",
+                element: <Navigate to='/auth/signup'/>
+            },
+        ],
+    },
+    {
+        path: 'posts',
+        element: (
+            <ProtectedRoute
+                redirectTo={'/auth/login'}
+                element={ <PostsLayout/>}
+            />
+        ),
+        children: [
+            {
+                path: '',
+                element: <PostsListPage/>
+            },
+            {
+                path: ":postId",
+                element: <PostPage/>
+            }
+        ],
+    },
+    {
+        path: "*",
+        element: <Navigate to='/posts'/>
+    }
+]
 
 function App() {
+    const elements = useRoutes()
     return (
         <div className='min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-150 flex flex-col'>
             <NavBar />
