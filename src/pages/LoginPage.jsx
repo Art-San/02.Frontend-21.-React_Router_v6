@@ -1,95 +1,95 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
 // Librares
-import * as Yup from "yup";
+import * as Yup from 'yup'
 // import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useFormik, FormikProvider } from "formik";
+import { useSelector, useDispatch } from 'react-redux'
+import { useFormik, FormikProvider } from 'formik'
 // Store
-import { login } from "../store/authSlice";
-import { clearMessage } from "../store/messageSlice";
+import { login } from '../store/authSlice'
+import { clearMessage } from '../store/messageSlice'
 // Components
-import SpinLoading from "../components/SpinLoader";
-import StyledNavLink from "../components/StyledNavLink";
-import Button from "../components/Button";
-import TextField from "../components/inputs/TextInput";
-import Card from "../components/Card";
+import SpinLoading from '../components/SpinLoader'
+import StyledNavLink from '../components/StyledNavLink'
+import Button from '../components/Button'
+import TextField from '../components/inputs/TextInput'
+import Card from '../components/Card'
 // Icons
-import { UserIcon, KeyIcon } from "@heroicons/react/outline";
-import { useNavigate } from "react-router-dom";
+import { UserIcon, KeyIcon } from '@heroicons/react/outline'
+import { useNavigate } from 'react-router-dom'
 
 const validationSchema = Yup.object().shape({
-    username: Yup.string().required("This field is required!"),
-    password: Yup.string().required("This field is required!"),
-});
+    username: Yup.string().required('This field is required!'),
+    password: Yup.string().required('This field is required!')
+})
 
 const initialValues = {
-    username: "",
-    password: "",
-};
+    username: '',
+    password: ''
+}
 
 const LoginPage = () => {
-    const [loading, setLoading] = useState(false);
-    const { message } = useSelector((state) => state.message);
+    const [loading, setLoading] = useState(false)
+    const { message } = useSelector((state) => state.message)
     const navigate = useNavigate()
     // const history = useHistory();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(clearMessage());
-    }, [dispatch]);
+        dispatch(clearMessage())
+    }, [dispatch])
 
     const handleLogin = (formValue) => {
-        const { username, password } = formValue;
-        setLoading(true);
+        const { username, password } = formValue
+        setLoading(true)
         // const redirect = history.location.state
         //     ? history.location.state.referrer.pathname
         //     : null;
         dispatch(login({ username, password }))
             .unwrap()
             .then(() => {
-                navigate('/posts', {replace: true})
+                navigate('/posts', { replace: true }) // не дает вернутся назад
                 // history.push(redirect || "/");
             })
             .catch(() => {
-                setLoading(false);
-            });
-    };
+                setLoading(false)
+            })
+    }
 
     const formik = useFormik({
         initialValues,
         validationSchema,
-        onSubmit: handleLogin,
-    });
+        onSubmit: handleLogin
+    })
 
     return (
         <>
-            <div className='mb-12 text-slate-900'>
+            <div className="mb-12 text-slate-900">
                 <Card.Title>Login</Card.Title>
 
-                <div className='text-sm text-slate-600'>
-                    or{" "}
-                    <StyledNavLink to='/auth/signUp' styleType='underline'>
-                        {" "}
+                <div className="text-sm text-slate-600">
+                    or{' '}
+                    <StyledNavLink to="/auth/signUp" styleType="underline">
+                        {' '}
                         start your 14-day free trial
                     </StyledNavLink>
                 </div>
                 <FormikProvider value={formik}>
                     <form
-                        className='space-y-6 min-w-[200px] w-full mb-10'
+                        className="space-y-6 min-w-[200px] w-full mb-10"
                         onSubmit={formik.handleSubmit}
                     >
                         <TextField
-                            label='Username'
-                            name='username'
+                            label="Username"
+                            name="username"
                             icon={UserIcon}
                         />
                         <TextField
-                            label='Password'
-                            name='password'
-                            type='password'
+                            label="Password"
+                            name="password"
+                            type="password"
                             icon={KeyIcon}
                         />
-                        <div className='pt-2'>
+                        <div className="pt-2">
                             <Button disabled={loading}>
                                 {loading && <SpinLoading />} Log In
                             </Button>
@@ -97,8 +97,8 @@ const LoginPage = () => {
                     </form>
 
                     {message && (
-                        <div className='form-group'>
-                            <div className='alert alert-danger' role='alert'>
+                        <div className="form-group">
+                            <div className="alert alert-danger" role="alert">
                                 {message}
                             </div>
                         </div>
@@ -106,7 +106,7 @@ const LoginPage = () => {
                 </FormikProvider>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default LoginPage;
+export default LoginPage
