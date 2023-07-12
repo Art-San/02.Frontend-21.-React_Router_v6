@@ -1,67 +1,68 @@
-import { Navigate } from "react-router-dom"
-import AuthLayout from "./layouts/AuthLayout"
-import PostsLayout from "./layouts/PostsLayout"
-import MainPage from "./pages/MainPage"
-import PostPage from "./pages/Posts/PostPage"
-import PostsListPage from "./pages/Posts/PostsListPage"
-import LoginPage from "./pages/LoginPage"
-import SignUpPage from "./pages/SigupPage"
-// import ProtectedRoute from "./components/ProtectedRoute"
+import { Navigate } from 'react-router-dom'
+import AuthLayout from './layouts/AuthLayout'
+import PostsLayout from './layouts/PostsLayout'
+import MainPage from './pages/MainPage'
+import PostPage from './pages/Posts/PostPage'
+import PostsListPage from './pages/Posts/PostsListPage'
+import LoginPage from './pages/LoginPage'
+import SignUpPage from './pages/SigupPage'
+import ProtectedRoute from './components/ProtectedRoute'
 
-const routes = (isLoggedIn, location) => [
+// // первый вапиант routes -- просто переменная
+const routes = [
     {
         path: '/',
-        element: <MainPage/>
+        element: <MainPage />
     },
     {
         path: 'auth',
-        element: <AuthLayout/>,
+        element: <AuthLayout />,
         children: [
             {
                 path: '',
-                element: <Navigate to='/auth/signup'/>
+                element: <Navigate to="/auth/signup" />
             },
             {
-                path: "login",
-                element: <LoginPage/>
+                path: 'login',
+                element: <LoginPage />
             },
             {
-                path: "signup",
-                element: <SignUpPage/>
+                path: 'signup',
+                element: <SignUpPage />
             },
             {
-                path: "*",
-                element: <Navigate to='/auth/signup'/>
-            },
-        ],
+                path: '*',
+                element: <Navigate to="/auth/signup" />
+            }
+        ]
     },
     {
         path: 'posts',
-        element: isLoggedIn ? (
-            <PostsLayout/>
-        ) : (
-            <Navigate to= '/auth/login' state={{referrer: location}} />
+        element: (
+            <ProtectedRoute
+                redirectTo={'/auth/login'}
+                element={<PostsLayout />}
+            />
         ),
         children: [
             {
                 path: '',
-                element: <PostsListPage/>
+                element: <PostsListPage />
             },
             {
-                path: ":postId",
-                element: <PostPage/>
+                path: ':postId',
+                element: <PostPage />
             }
-        ],
+        ]
     },
     {
-        path: "*",
-        element: <Navigate to={isLoggedIn ? '/posts' : '/'}/>
+        path: '*',
+        element: <Navigate to="/posts" />
     }
 ]
 
-
-// // первый вапиант routes -- просто переменная
-// const routes = [
+// второй вапиант routes -- как функция
+// const routes = (isLoggedIn, location) => [
 //     {
 //         path: '/',
 //         element: <MainPage/>
@@ -90,11 +91,10 @@ const routes = (isLoggedIn, location) => [
 //     },
 //     {
 //         path: 'posts',
-//         element: (
-//             <ProtectedRoute
-//                 redirectTo={'/auth/login'}
-//                 element={ <PostsLayout/>}
-//             />
+//         element: isLoggedIn ? (
+//             <PostsLayout/>
+//         ) : (
+//             <Navigate to= '/auth/login' state={{referrer: location}} />
 //         ),
 //         children: [
 //             {
@@ -109,7 +109,7 @@ const routes = (isLoggedIn, location) => [
 //     },
 //     {
 //         path: "*",
-//         element: <Navigate to='/posts'/>
+//         element: <Navigate to={isLoggedIn ? '/posts' : '/'}/>
 //     }
 // ]
 
